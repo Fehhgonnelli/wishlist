@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: dev
+
+# Configurações do Springdoc OpenAPI
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    # Organização das configurações da interface Swagger
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: none
+  # Configuração do caminho da API
+  api-docs:
+    path: /v3/api-docs
+logging:
+  file:
+    name: logs/wishlist-application.log
+  level:
+    root: INFO
+    com:
+      wishlist: DEBUG

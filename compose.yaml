@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_wishlist_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-admin}
+      - MONGO_INITDB_DATABASE=wishlist
+
+  wishlist_app:
+    container_name: wishlist
+    build: ./
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=hom
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=wishlist
+      - SPRING_DATA_MONGODB_USERNAME=${MONGO_USERNAME:-admin}
+      - SPRING_DATA_MONGODB_PASSWORD=${MONGO_PASSWORD:-admin}
+      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
+    depends_on:
+      - mongodb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+volumes:
+  mongodb_wishlist_data:

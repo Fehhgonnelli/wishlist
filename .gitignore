@@ -1,16 +1,12 @@
-# Compiled class file
+
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
+logs/
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,6 +15,68 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# MongoDB
+data/db/
+mongod.lock
+
+# Docker
+.dockerignore
+
+# SonarQube
+.scannerwork/
+.sonar/
+.sonarlint/
+
+# Application specific
+application-local.yml
+application-local.properties
+**/application-local.*
+
+# Test coverage
+/coverage/
+/jacoco-report/
+
+# Sensitive data
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+```
+

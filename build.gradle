@@ -1,0 +1,130 @@
+buildscript {
+	ext {
+		springBootVersion = '3.2.0'
+		springDependencyManagementVersion = '1.1.7'
+		swaggerVersion = '2.2.32'
+		springDocVersion = '2.1.0'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+	id 'io.swagger.core.v3.swagger-gradle-plugin' version "${swaggerVersion}"
+	id "org.sonarqube" version "6.0.1.5171"
+	id 'jacoco'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
+
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sonarqube {
+	properties {
+
+		property "sonar.sources", "src/main/java"
+		property "sonar.tests", "src/test/java"
+
+		property "sonar.java.binaries", layout.buildDirectory.dir("classes/java/main").get().asFile.path
+		property "sonar.java.test.binaries", layout.buildDirectory.dir("classes/java/test").get().asFile.path
+
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.path
+
+		property "sonar.junit.reportPaths", layout.buildDirectory.dir("test-results/test").get().asFile.path
+
+		property "sonar.coverage.exclusions", [
+				"**/exception/**",
+				"**/domain/**",
+				"**/dto/**",
+				"**/mapper/**",
+				"**/repository/**",
+				"**/config/**",
+				"**/WishlistApplication.java"
+		].join(",")
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = true
+		html.required = true
+		xml.outputLocation = layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml")
+
+	}
+	dependsOn tasks.test
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					'**/domain/**',
+					'**/dto/**',
+					'**/exception/**',
+					'**/repository/**',
+					"**/mapper/**",
+					'**/config/**',
+					'**/WishlistApplication.class'
+
+			])
+		}))
+	}
+}
+
+tasks.named('sonar') {
+	dependsOn tasks.named('jacocoTestReport')
+}
+
+tasks.named('jacocoTestReport') {
+	dependsOn tasks.named('test')
+}
+
+
+tasks.named('build') {
+	finalizedBy tasks.named('sonar')
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
