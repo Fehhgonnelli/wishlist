@@ -33,9 +33,9 @@ API RESTful para gerenciamento de Wishlist de clientes, desenvolvida com Spring 
    - Senha: `admin`
 
 Siga as instruções para alterar a senha padrão por uma mais segura.
+
 2. Configure um novo projeto:
    - Clique em "Create Project"
-   - Selecione "Manually"
    - Dê o nome "wishlist" ao projeto
    - Use as configurações globais padrão
 
